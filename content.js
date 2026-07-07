@@ -10,6 +10,30 @@ function isExcluded(host, exceptions) {
   );
 }
 
+function isTransparent(color) {
+  return !color || color === "transparent" || /rgba\(.*,\s*0\)$/.test(color);
+}
+
+// Effective background color at the bottom of the page: the last visible
+// element in <body> (usually the footer), then its ancestors, then <html>.
+function resolveSiteColor() {
+  let bottom = null;
+  for (let el = document.body.lastElementChild; el; el = el.previousElementSibling) {
+    if (el.id === SPACER_ID || el instanceof HTMLScriptElement || el instanceof HTMLStyleElement) continue;
+    const style = getComputedStyle(el);
+    if (style.display === "none" || style.visibility === "hidden") continue;
+    if (style.position === "fixed" || el.getBoundingClientRect().height === 0) continue;
+    bottom = el;
+    break;
+  }
+  for (let el = bottom; el; el = el.parentElement) {
+    const color = getComputedStyle(el).backgroundColor;
+    if (!isTransparent(color)) return color;
+  }
+  const htmlColor = getComputedStyle(document.documentElement).backgroundColor;
+  return isTransparent(htmlColor) ? "#fff" : htmlColor;
+}
+
 function addSpacer() {
   if (document.getElementById(SPACER_ID)) return;
   const spacer = document.createElement("div");
@@ -18,10 +42,10 @@ function addSpacer() {
   spacer.style.cssText = [
     "display: block",
     "height: 50vh",
-    "width: 1px",
+    "width: 100%",
     "flex-shrink: 0",
     "pointer-events: none",
-    "background: transparent",
+    `background: ${resolveSiteColor()}`,
     "border: 0",
     "margin: 0",
     "padding: 0",
@@ -54,6 +78,7 @@ const observer = new MutationObserver(() => {
     addSpacer();
   } else if (spacer !== document.body.lastElementChild) {
     document.body.appendChild(spacer);
+    spacer.style.setProperty("background", resolveSiteColor(), "important");
   }
 });
 
