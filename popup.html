@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" alt="" width="24" height="24" />
+    <h1>Legroom</h1>
+  </header>
+
+  <section id="current-site" hidden>
+    <p class="site-name" id="site-name"></p>
+    <button id="toggle-site"></button>
+  </section>
+
+  <section id="exceptions-section">
+    <h2>Disabled on</h2>
+    <ul id="exception-list"></ul>
+    <p id="empty-note" class="muted">No exceptions — Legroom is active everywhere.</p>
+  </section>
+</body>
+<script src="popup.js"></script>
+</html>
