@@ -10,6 +10,19 @@ function isExcluded(host, exceptions) {
   );
 }
 
+// App-style pages (Azure DevOps, Gmail…) disable document scrolling and
+// scroll in inner containers instead; their <body> is often a fixed-height
+// flex column, where an extra 50vh child squashes the app out of view.
+// The spacer is useless there anyway — only inject when the page scrolls
+// at the document/body level.
+function pageScrollsNormally() {
+  const hidden = (v) => v === "hidden" || v === "clip";
+  return (
+    !hidden(getComputedStyle(document.documentElement).overflowY) &&
+    !hidden(getComputedStyle(document.body).overflowY)
+  );
+}
+
 function isTransparent(color) {
   return !color || color === "transparent" || /rgba\(.*,\s*0\)$/.test(color);
 }
@@ -62,7 +75,7 @@ function removeSpacer() {
 async function apply() {
   const { exceptions = [] } = await chrome.storage.sync.get("exceptions");
   enabled = !isExcluded(location.hostname, exceptions);
-  if (enabled) {
+  if (enabled && pageScrollsNormally()) {
     addSpacer();
   } else {
     removeSpacer();
@@ -70,9 +83,14 @@ async function apply() {
 }
 
 // Some sites rebuild <body> content after load; re-add the spacer if it gets
-// wiped and keep it as the last element of the page.
+// wiped and keep it as the last element of the page. SPAs may also switch
+// document scrolling off after load — pull the spacer back out then.
 const observer = new MutationObserver(() => {
   if (!enabled) return;
+  if (!pageScrollsNormally()) {
+    removeSpacer();
+    return;
+  }
   const spacer = document.getElementById(SPACER_ID);
   if (!spacer) {
     addSpacer();
@@ -87,5 +105,13 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 apply().then(() => {
-  observer.observe(document.body, { childList: true });
+  observer.observe(document.body, {
+    childList: true,
+    attributes: true,
+    attributeFilter: ["style", "class"],
+  });
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["style", "class"],
+  });
 });
