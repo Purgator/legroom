@@ -1,3 +1,23 @@
+// Must match content_scripts matches in manifest.json. Chrome grants these
+// at install; Firefox MV3 treats them as optional, so until the user grants
+// them the content script silently never runs.
+const HOST_ORIGINS = ["http://*/*", "https://*/*"];
+
+async function renderPermissionBanner() {
+  let granted = true;
+  try {
+    granted = await chrome.permissions.contains({ origins: HOST_ORIGINS });
+  } catch {
+    // permissions API unavailable — assume granted rather than nag
+  }
+  const banner = document.getElementById("perm-banner");
+  banner.hidden = granted;
+  document.getElementById("grant-perms").onclick = async () => {
+    const ok = await chrome.permissions.request({ origins: HOST_ORIGINS });
+    if (ok) banner.hidden = true;
+  };
+}
+
 async function getExceptions() {
   const { exceptions = [] } = await chrome.storage.sync.get("exceptions");
   return exceptions;
@@ -67,4 +87,5 @@ async function render() {
   }
 }
 
+renderPermissionBanner();
 render();
