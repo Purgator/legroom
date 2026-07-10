@@ -10,17 +10,24 @@ function isExcluded(host, exceptions) {
   );
 }
 
-// App-style pages (Azure DevOps, Gmail…) disable document scrolling and
-// scroll in inner containers instead; their <body> is often a fixed-height
-// flex column, where an extra 50vh child squashes the app out of view.
-// The spacer is useless there anyway — only inject when the page scrolls
-// at the document/body level.
-function pageScrollsNormally() {
+// App-style pages (Azure DevOps, Gmail…) size their layout to the viewport
+// and scroll in inner containers; injecting a 50vh child there breaks the
+// layout (fixed-height flex/grid shells squash or overlay the app) and is
+// useless anyway since the document never scrolls. Only add legroom when
+// document scrolling isn't disabled AND the page content is actually taller
+// than the viewport — the one case where a footer needs lifting.
+function pageNeedsLegroom() {
   const hidden = (v) => v === "hidden" || v === "clip";
-  return (
-    !hidden(getComputedStyle(document.documentElement).overflowY) &&
-    !hidden(getComputedStyle(document.body).overflowY)
-  );
+  if (
+    hidden(getComputedStyle(document.documentElement).overflowY) ||
+    hidden(getComputedStyle(document.body).overflowY)
+  ) {
+    return false;
+  }
+  const spacer = document.getElementById(SPACER_ID);
+  const spacerHeight = spacer ? spacer.offsetHeight : 0;
+  const scroller = document.scrollingElement || document.documentElement;
+  return scroller.scrollHeight - spacerHeight > scroller.clientHeight + 1;
 }
 
 function isTransparent(color) {
@@ -75,7 +82,7 @@ function removeSpacer() {
 async function apply() {
   const { exceptions = [] } = await chrome.storage.sync.get("exceptions");
   enabled = !isExcluded(location.hostname, exceptions);
-  if (enabled && pageScrollsNormally()) {
+  if (enabled && pageNeedsLegroom()) {
     addSpacer();
   } else {
     removeSpacer();
@@ -87,7 +94,7 @@ async function apply() {
 // document scrolling off after load — pull the spacer back out then.
 const observer = new MutationObserver(() => {
   if (!enabled) return;
-  if (!pageScrollsNormally()) {
+  if (!pageNeedsLegroom()) {
     removeSpacer();
     return;
   }
