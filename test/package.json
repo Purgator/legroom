@@ -1,0 +1,10 @@
+{
+  "name": "legroom-test",
+  "private": true,
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}

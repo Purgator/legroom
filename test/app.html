@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; }
+  header { height: 48px; background: #0078d4; color: #fff; flex-shrink: 0; }
+  main { flex: 1 1 0; min-height: 0; overflow-y: auto; background: #f8f8f8; }
+</style>
+</head>
+<body>
+  <header>App header</header>
+  <main id="app">
+    <div style="height:3000px">Inner scrolling content (like Azure DevOps)</div>
+  </main>
+  <script>
+    // Simulate an SPA render burst after load, like ADO finishing hydration
+    setTimeout(() => {
+      const el = document.createElement("div");
+      el.textContent = "late render";
+      document.getElementById("app").appendChild(el);
+    }, 500);
+  </script>
+</body>
+</html>
