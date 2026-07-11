@@ -89,10 +89,7 @@ async function apply() {
   }
 }
 
-// Some sites rebuild <body> content after load; re-add the spacer if it gets
-// wiped and keep it as the last element of the page. SPAs may also switch
-// document scrolling off after load — pull the spacer back out then.
-const observer = new MutationObserver(() => {
+function syncSpacer() {
   if (!enabled) return;
   if (!pageNeedsLegroom()) {
     removeSpacer();
@@ -105,20 +102,38 @@ const observer = new MutationObserver(() => {
     document.body.appendChild(spacer);
     spacer.style.setProperty("background", resolveSiteColor(), "important");
   }
+}
+
+// Some sites rebuild <body> content after load; re-add the spacer if it gets
+// wiped and keep it as the last element of the page. SPAs may also switch
+// document scrolling off after load — pull the spacer back out then.
+// Throttled to one check per animation frame: syncSpacer reads computed
+// styles and scrollHeight, and busy SPAs (Discord…) mutate the DOM
+// constantly — checking on every mutation would force layout each time.
+let checkScheduled = false;
+const observer = new MutationObserver(() => {
+  if (!enabled || checkScheduled) return;
+  checkScheduled = true;
+  requestAnimationFrame(() => {
+    checkScheduled = false;
+    syncSpacer();
+  });
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === "sync" && changes.exceptions) apply();
 });
 
-apply().then(() => {
-  observer.observe(document.body, {
-    childList: true,
-    attributes: true,
-    attributeFilter: ["style", "class"],
+if (document.body) {
+  apply().then(() => {
+    observer.observe(document.body, {
+      childList: true,
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["style", "class"],
+    });
   });
-  observer.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ["style", "class"],
-  });
-});
+}
