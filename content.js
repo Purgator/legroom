@@ -4,11 +4,6 @@
 const SPACER_ID = "__legroom_spacer__";
 let enabled = false;
 
-function isExcluded(host, exceptions) {
-  return exceptions.some(
-    (entry) => host === entry || host.endsWith("." + entry)
-  );
-}
 
 // App-style pages (Azure DevOps, Gmail…) size their layout to the viewport
 // and scroll in inner containers; injecting a 50vh child there breaks the
@@ -81,7 +76,9 @@ function removeSpacer() {
 
 async function apply() {
   const { exceptions = [] } = await chrome.storage.sync.get("exceptions");
-  enabled = !isExcluded(location.hostname, exceptions);
+  enabled =
+    !legroomHostMatches(location.hostname, LEGROOM_BUILTIN_EXCEPTIONS) &&
+    !legroomHostMatches(location.hostname, exceptions);
   if (enabled && pageNeedsLegroom()) {
     addSpacer();
   } else {

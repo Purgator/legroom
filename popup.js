@@ -48,9 +48,14 @@ async function render() {
   const currentSection = document.getElementById("current-site");
   const toggleBtn = document.getElementById("toggle-site");
 
+  const builtinNote = document.getElementById("builtin-note");
+
   if (host) {
     currentSection.hidden = false;
     document.getElementById("site-name").textContent = host;
+    const builtin = legroomHostMatches(host, LEGROOM_BUILTIN_EXCEPTIONS);
+    toggleBtn.hidden = builtin;
+    builtinNote.hidden = !builtin;
     const disabled = exceptions.includes(host);
     toggleBtn.textContent = disabled
       ? "Enable on this site"

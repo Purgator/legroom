@@ -18,6 +18,8 @@ Click the Legroom icon in the toolbar to:
 
 Exceptions are synced across your browser profile via `storage.sync`.
 
+Legroom is also permanently off on extension store pages (Chrome Web Store, addons.mozilla.org, Edge Add-ons…). Browsers already block extensions on their own store and on internal pages like `chrome://extensions`; the built-in exceptions cover the other browsers' stores, which are ordinary websites.
+
 ## Install
 
 Legroom is not on the extension stores yet; you install it from a release zip.

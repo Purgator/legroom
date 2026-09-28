@@ -26,7 +26,13 @@ function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
     executablePath: CHROME,
     headless: true,
     enableExtensions: true,
-    args: ["--no-first-run", "--window-size=1280,800"],
+    args: [
+      "--no-first-run",
+      "--window-size=1280,800",
+      // Lets the built-in-exception test reach the local server under a
+      // store hostname
+      "--host-resolver-rules=MAP chromewebstore.google.com 127.0.0.1",
+    ],
   });
   await browser.installExtension(EXT_PATH);
 
@@ -64,6 +70,13 @@ function sleep(ms) { return new Promise((r) => setTimeout(r, ms)); }
   if (!article.spacer) { console.log("FAIL: no spacer on normal article page"); failures++; }
   if (article.spacer && Math.abs(article.spacerHeight - 400) > 5) { console.log("FAIL: spacer height " + article.spacerHeight + ", expected ~400 (50vh of 800)"); failures++; }
   if (article.spacer && article.spacerBg !== "rgb(20, 30, 40)") { console.log("FAIL: spacer bg " + article.spacerBg + ", expected footer color rgb(20, 30, 40)"); failures++; }
+
+  // --- Built-in exception: extension store hostname ---
+  await page.goto("http://chromewebstore.google.com:8123/article.html");
+  await sleep(1500);
+  const store = await page.evaluate((id) => !!document.getElementById(id), SPACER_ID);
+  console.log("store hostname:", JSON.stringify({ spacer: store }));
+  if (store) { console.log("FAIL: spacer injected on extension store hostname"); failures++; }
 
   await browser.close();
   server.close();
