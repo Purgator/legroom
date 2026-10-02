@@ -22,11 +22,11 @@ Legroom is also permanently off on extension store pages (Chrome Web Store, addo
 
 ## Install
 
-Legroom is not on the extension stores yet; you install it from a release zip.
+Legroom is not on the extension stores yet; you install it from a release zip. Each release ships one zip per browser: `legroom-chrome.zip` for Chrome and other Chromium browsers, `legroom-firefox.zip` for Firefox.
 
 ### Chrome (and Edge, Brave, Opera, Vivaldi…)
 
-1. Download `legroom-vX.Y.Z.zip` from the [latest release](https://github.com/Purgator/legroom/releases/latest) and extract it to a folder you'll keep (Chrome loads the extension from that folder — don't delete it afterwards).
+1. Download `legroom-chrome.zip` from the [latest release](https://github.com/Purgator/legroom/releases/latest) and extract it to a folder you'll keep (Chrome loads the extension from that folder — don't delete it afterwards).
 2. Open `chrome://extensions` in your browser.
 3. Enable **Developer mode** (toggle in the top-right corner).
 4. Click **Load unpacked** and select the extracted folder.
@@ -38,7 +38,7 @@ To update to a newer release, extract the new zip over the same folder and click
 
 Firefox only keeps unsigned extensions until you restart the browser, so the zip installs as a *temporary add-on*:
 
-1. Download `legroom-vX.Y.Z.zip` from the [latest release](https://github.com/Purgator/legroom/releases/latest) (no need to extract it).
+1. Download `legroom-firefox.zip` from the [latest release](https://github.com/Purgator/legroom/releases/latest) (no need to extract it).
 2. Open `about:debugging#/runtime/this-firefox`.
 3. Click **Load Temporary Add-on…** and select the zip.
 4. Click the Legroom toolbar icon and press **Grant access** in the banner — unlike Chrome, Firefox doesn't grant website access at install time, and Legroom does nothing until you do. Reload any tabs that were already open.
@@ -49,6 +49,14 @@ The add-on disappears when Firefox restarts; repeat the steps to load it again. 
 
 Clone this repository and follow the Chrome steps 2–4 above, selecting the repository folder (or load `manifest.json` as a temporary add-on in Firefox).
 
+### Building the release zips
+
+```bash
+node scripts/build.js
+```
+
+Produces `dist/legroom-chrome.zip` and `dist/legroom-firefox.zip` (no dependencies, Node 22+). The source `manifest.json` carries both browsers' keys so the repo folder loads unpacked anywhere; each zip keeps only the keys its browser needs.
+
 ## Files
 
 | File | Role |
@@ -57,3 +65,4 @@ Clone this repository and follow the Chrome steps 2–4 above, selecting the rep
 | `content.js` | Injects the end-of-page spacer, honors exceptions live |
 | `popup.html/css/js` | Toolbar popup for managing site exceptions |
 | `icons/` | Extension icons |
+| `scripts/build.js` | Builds the per-browser release zips into `dist/` |
