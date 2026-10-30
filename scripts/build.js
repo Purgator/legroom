@@ -68,7 +68,7 @@ function makeZip(dir) {
 
 const root = path.join(__dirname, "..");
 const dist = path.join(root, "dist");
-const FILES = ["common.js", "content.js", "popup.html", "popup.js", "popup.css", "README.md"];
+const FILES = ["common.js", "content.js", "popup.html", "popup.js", "popup.css", "README.md", "LICENSE"];
 const DIRS = ["icons"];
 
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "manifest.json"), "utf8"));

@@ -66,3 +66,7 @@ Produces `dist/legroom-chrome.zip` and `dist/legroom-firefox.zip` (no dependenci
 | `popup.html/css/js` | Toolbar popup for managing site exceptions |
 | `icons/` | Extension icons |
 | `scripts/build.js` | Builds the per-browser release zips into `dist/` |
+
+## License
+
+Legroom is free software, released under the [GNU General Public License v3.0 or later](LICENSE) (`GPL-3.0-or-later`): you can use, study, share and improve it, and derivative works must stay under the same license.
