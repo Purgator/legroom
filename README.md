@@ -2,9 +2,16 @@
 
 A tiny browser extension (Chrome & Firefox) that lets you **scroll past the end of a page**, so the footer (or last paragraph) can sit in the middle of your screen instead of being pinned to the bottom — much easier on the eyes when reading.
 
+![The end of an article scrolled up with Legroom: the site footer sits mid-screen, and the Legroom popup is open](docs/legroom.png)
+
 ## How it works
 
 Legroom appends an invisible 50 vh spacer at the very end of every page, giving you extra scroll room after the real content ends. No layout changes, no visual noise — just breathing room.
+
+| | |
+|---|---|
+| ![Without Legroom, the page stops scrolling with its footer stuck to the bottom edge of the window](docs/end-without.png) | ![With Legroom, the same page scrolls further and its footer reaches the middle of the window](docs/end-with.png) |
+| Without Legroom: scrolled as far as it goes, the end of the page is stuck to the bottom edge. | With Legroom: the same page scrolls half a screen further. The extra room takes the colour of the footer. |
 
 ## Settings
 
@@ -15,6 +22,11 @@ Click the Legroom icon in the toolbar to:
 - **Disable on this site** — adds the current site to the exception list (takes effect immediately, subdomains included).
 - **Enable on this site** — removes it again.
 - View and remove any exception from the list.
+
+| | |
+|---|---|
+| ![Legroom popup: the current site with its "Disable on this site" button, and two sites in the exception list](docs/popup.png) | ![Legroom popup in dark theme, after disabling the current site: it now appears in the exception list](docs/popup-site-off.png) |
+| The popup on a site where Legroom is active. | The same site once disabled, in dark theme. |
 
 Exceptions are synced across your browser profile via `storage.sync`.
 
@@ -57,6 +69,14 @@ node scripts/build.js
 
 Produces `dist/legroom-chrome.zip` and `dist/legroom-firefox.zip` (no dependencies, Node 22+). The source `manifest.json` carries both browsers' keys so the repo folder loads unpacked anywhere; each zip keeps only the keys its browser needs.
 
+### Regenerating the screenshots
+
+```bash
+node scripts/screenshots.js
+```
+
+Rewrites the images in `docs/`: the real `content.js` and `popup.html` run in headless Chrome on `test/demo-page.html`, with the `chrome.*` APIs stubbed. It uses the test suite's `puppeteer-core` (run `npm install` in `test/` once) and your installed Chrome; set `CHROME_PATH` if it lives elsewhere. `docs/` is not part of the release zips.
+
 ## Files
 
 | File | Role |
@@ -66,6 +86,8 @@ Produces `dist/legroom-chrome.zip` and `dist/legroom-firefox.zip` (no dependenci
 | `popup.html/css/js` | Toolbar popup for managing site exceptions |
 | `icons/` | Extension icons |
 | `scripts/build.js` | Builds the per-browser release zips into `dist/` |
+| `scripts/screenshots.js` | Regenerates the screenshots of this README in `docs/` |
+| `test/demo-page.html` | The made-up reading blog the screenshots are taken on |
 
 ## License
 

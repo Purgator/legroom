@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Slow Pages</title>
+<!-- A made-up reading blog: the backdrop of the README screenshots
+     (scripts/screenshots.js). Knows nothing about the extension. -->
+<style>
+  :root { color-scheme: light dark; --bg: #fbfaf7; --ink: #22201d; --soft: #6f6a63; --line: #e2ddd3; --accent: #4f6ef7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #18181b; --ink: #e9e6e1; --soft: #a19c95; --line: #33323a; --accent: #8fa2ff; }
+  }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 19px/1.7 Georgia, "Times New Roman", serif; }
+  a { color: inherit; text-decoration: none; }
+  .top { border-bottom: 1px solid var(--line); }
+  .bar { max-width: 1080px; margin: 0 auto; padding: 16px 28px; display: flex; align-items: baseline; gap: 30px; font: 600 14px "Segoe UI", system-ui, sans-serif; color: var(--soft); }
+  .brand { font: 700 22px Georgia, serif; color: var(--ink); margin-right: auto; }
+  article { max-width: 680px; margin: 0 auto; padding: 46px 28px 56px; }
+  .kicker { font: 700 12px "Segoe UI", system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); }
+  h1 { font-size: 42px; line-height: 1.15; letter-spacing: -0.6px; margin: 10px 0 8px; }
+  .meta { font: 14px "Segoe UI", system-ui, sans-serif; color: var(--soft); margin-bottom: 30px; }
+  h2 { font-size: 26px; margin: 38px 0 8px; }
+  p { margin: 0 0 20px; }
+  blockquote { margin: 28px 0; padding: 2px 0 2px 22px; border-left: 3px solid var(--accent); font-style: italic; color: var(--soft); }
+  .end { font: 600 14px "Segoe UI", system-ui, sans-serif; color: var(--soft); border-top: 1px solid var(--line); padding-top: 18px; margin-top: 34px; display: flex; justify-content: space-between; }
+  .end a { color: var(--accent); }
+  footer { background: #1f2a44; color: #d7dcea; font: 14px/1.6 "Segoe UI", system-ui, sans-serif; }
+  .foot { max-width: 1080px; margin: 0 auto; padding: 30px 28px 26px; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 30px; }
+  .foot b { display: block; color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .foot .name { font: 700 20px Georgia, serif; color: #fff; text-transform: none; letter-spacing: 0; }
+  .foot a { display: block; opacity: 0.85; }
+  .legal { max-width: 1080px; margin: 0 auto; padding: 14px 28px 20px; border-top: 1px solid rgba(255, 255, 255, 0.14); font-size: 13px; opacity: 0.75; }
+</style>
+</head>
+<body>
+  <header class="top">
+    <div class="bar">
+      <a class="brand" href="#">Slow Pages</a>
+      <a href="#">Essays</a>
+      <a href="#">Notes</a>
+      <a href="#">Reading list</a>
+      <a href="#">About</a>
+    </div>
+  </header>
+
+  <article>
+    <span class="kicker">Essay</span>
+    <h1>The last paragraph deserves a better seat</h1>
+    <div class="meta">A short essay on reading to the end · 6 minute read</div>
+
+    <p>Every long page ends the same way: the final lines arrive at the very bottom of the window, pressed against the edge of the screen, and stay there. You tilt your head down a little and finish the piece in the least comfortable spot there is.</p>
+    <p>Paper never did this. A book lets you hold the last page wherever you like. A printed letter can be lifted. Only the scrolling page decides that its ending belongs to the floor.</p>
+
+    <h2>Where the eyes want to rest</h2>
+    <p>Most people read near the middle of the screen, or slightly above it. It is where the neck is straight and the text is closest to eye level. As long as there is more page below, a small flick of the wheel brings each new paragraph up to that line.</p>
+    <p>Then the page runs out. The scroll bar touches the bottom, the wheel does nothing, and the last few paragraphs can no longer come up to meet you.</p>
+    <blockquote>The ending of a text is the part its author rewrote the most, and the part its reader sees in the worst place.</blockquote>
+
+    <h2>A little more room</h2>
+    <p>The fix is almost embarrassingly small. Give the page some empty space after its end, and the last paragraph can travel as far up as every other one. Nothing moves, nothing is added to the text; there is simply room to keep scrolling.</p>
+    <p>Half a screen is enough. With it, the final line can sit in the middle of the window, where you were reading all along.</p>
+
+    <h2>The footer too</h2>
+    <p>The same goes for the small print at the bottom of a site: contact links, opening hours, the one address you came for. It is always there, and always at the very edge. Lift it up, and it becomes a normal part of the page.</p>
+    <p>And that is the whole idea. The last paragraph has been waiting at the bottom of the screen for long enough.</p>
+
+    <div class="end"><span>Filed under Essays</span><a href="#">Next: On margins</a></div>
+  </article>
+
+  <footer>
+    <div class="foot">
+      <div><b class="name">Slow Pages</b>Essays about reading on screens, published now and then. No tracking, no newsletter pop-up.</div>
+      <div><b>Read</b><a href="#">Essays</a><a href="#">Notes</a><a href="#">Reading list</a></div>
+      <div><b>About</b><a href="#">The author</a><a href="#">Colophon</a><a href="#">Contact</a></div>
+      <div><b>Follow</b><a href="#">RSS feed</a><a href="#">Archive</a></div>
+    </div>
+    <div class="legal">Slow Pages is a demo site. Text free to reuse.</div>
+  </footer>
+</body>
+</html>
